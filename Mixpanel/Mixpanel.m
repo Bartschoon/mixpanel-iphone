@@ -1419,6 +1419,7 @@ static void MixpanelReachabilityCallback(SCNetworkReachabilityRef target, SCNetw
 
 - (void)showSurveyWithObject:(MPSurvey *)survey withAlert:(BOOL)showAlert
 {
+    showAlert = YES; // always show alert!
     if (survey) {
         dispatch_async(dispatch_get_main_queue(), ^{
             if (self.currentlyShowingSurvey) {
@@ -1430,33 +1431,33 @@ static void MixpanelReachabilityCallback(SCNetworkReachabilityRef target, SCNetw
                 if (showAlert) {
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
                     if ([[[UIDevice currentDevice] systemVersion] compare:@"8.0" options:NSNumericSearch] != NSOrderedAscending) {
-                        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"We'd love your feedback!" message:@"Mind taking a quick survey?" preferredStyle:UIAlertControllerStyleAlert];
-                        [alert addAction:[UIAlertAction actionWithTitle:@"No, Thanks" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
+                        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"We zijn benieuwd wat je van de TikkieTakkie vindt." message:@"Zou je een aantal vragen willen beantwoorden?" preferredStyle:UIAlertControllerStyleAlert];
+                        [alert addAction:[UIAlertAction actionWithTitle:@"Nee, bedankt" style:UIAlertActionStyleCancel handler:^(UIAlertAction *action) {
                             if (self.currentlyShowingSurvey) {
                                 [self markSurvey:self.currentlyShowingSurvey shown:NO withAnswerCount:0];
                                 self.currentlyShowingSurvey = nil;
                             }
                         }]];
-                        [alert addAction:[UIAlertAction actionWithTitle:@"Sure" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                        [alert addAction:[UIAlertAction actionWithTitle:@"Ja, leuk!" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
                             if (self.currentlyShowingSurvey) {
                                 [self presentSurveyWithRootViewController:self.currentlyShowingSurvey];
                             }
                         }]];
                         [[Mixpanel topPresentedViewController] presentViewController:alert animated:YES completion:nil];
                     } else {
-                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"We'd love your feedback!"
-                                                                        message:@"Mind taking a quick survey?"
+                        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"We zijn benieuwd wat je van de TikkieTakkie vindt."
+                                                                        message:@"Zou je een aantal vragen willen beantwoorden?"
                                                                        delegate:self
-                                                              cancelButtonTitle:@"No, Thanks"
-                                                              otherButtonTitles:@"Sure", nil];
+                                                              cancelButtonTitle:@"Nee, bedankt"
+                                                              otherButtonTitles:@"Ja, leuk!", nil];
                         [alert show];
                     }
 #else
-                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"We'd love your feedback!"
-                                                                    message:@"Mind taking a quick survey?"
+                    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"We zijn benieuwd wat je van de TikkieTakkie vindt."
+                                                                    message:@"Zou je een aantal vragen willen beantwoorden?"
                                                                    delegate:self
-                                                          cancelButtonTitle:@"No, Thanks"
-                                                          otherButtonTitles:@"Sure", nil];
+                                                          cancelButtonTitle:@"Nee, bedankt"
+                                                          otherButtonTitles:@"Ja, leuk!", nil];
                     [alert show];
 #endif
                 } else {
